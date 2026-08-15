@@ -1,0 +1,30 @@
+trigger: hz(10, hour)
+channel: db
+metadata:
+  table: boosts
+schema:
+  type: object
+  properties:
+    id:
+      type: string
+      pattern: "[a-zA-Z0-9]{32}"
+    user_id:
+      type: function
+      expression: user.id
+      variables:
+        user:
+          type: reference
+          effect: users.create
+    take_id:
+      type: function
+      expression: take.id
+      variables:
+        take:
+          type: reference
+          effect: takes.create
+    created_at:
+      type: context
+      path: ["clock", "now"]
+    deleted_at:
+      type: constant
+      value: null

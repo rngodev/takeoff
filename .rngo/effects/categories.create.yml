@@ -1,0 +1,19 @@
+trigger: hz(1, month)
+channel: db
+metadata:
+  table: categories
+schema:
+  type: object
+  properties:
+    id:
+      type: string
+      pattern: "[a-zA-Z0-9]{32}"
+    slug:
+      type: string
+      pattern: "[a-z]{4,15}"
+    name:
+      type: string
+      pattern: "[A-Za-z ]{4,20}"
+    created_at:
+      type: context
+      path: ["clock", "now"]

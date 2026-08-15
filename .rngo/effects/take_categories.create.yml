@@ -1,0 +1,21 @@
+trigger: hz(4, hour)
+channel: db
+metadata:
+  table: take_categories
+schema:
+  type: object
+  properties:
+    take_id:
+      type: function
+      expression: take.id
+      variables:
+        take:
+          type: reference
+          effect: takes.create
+    category_id:
+      type: function
+      expression: category.id
+      variables:
+        category:
+          type: reference
+          effect: categories.create

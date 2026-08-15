@@ -1,0 +1,30 @@
+trigger: hz(5, hour)
+channel: db
+metadata:
+  table: pundit_follows
+schema:
+  type: object
+  properties:
+    id:
+      type: string
+      pattern: "[a-zA-Z0-9]{32}"
+    user_id:
+      type: function
+      expression: user.id
+      variables:
+        user:
+          type: reference
+          effect: users.create
+    pundit_id:
+      type: function
+      expression: pundit.id
+      variables:
+        pundit:
+          type: reference
+          effect: pundits.create
+    created_at:
+      type: context
+      path: ["clock", "now"]
+    deleted_at:
+      type: constant
+      value: null

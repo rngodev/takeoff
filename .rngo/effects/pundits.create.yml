@@ -1,0 +1,70 @@
+trigger: hz(1, day)
+channel: db
+metadata:
+  table: pundits
+schema:
+  type: object
+  properties:
+    id:
+      type: string
+      pattern: "[a-zA-Z0-9]{32}"
+    slug:
+      type: function
+      expression: "base + '-' + suffix"
+      variables:
+        base:
+          type: string
+          pattern: "[a-z0-9]{4,20}"
+        suffix:
+          type: string
+          pattern: "[a-z0-9]{6,8}"
+    name:
+      type: string
+      pattern: "[A-Za-z]{3,12} [A-Za-z]{3,15}"
+    url:
+      type: select
+      options:
+        - weight: 3
+          schema:
+            type: function
+            expression: "'https://' + host + '.com'"
+            variables:
+              host:
+                type: string
+                pattern: "[a-z]{4,12}"
+        - weight: 1
+          schema: { type: constant, value: null }
+    description:
+      type: select
+      options:
+        - weight: 3
+          schema:
+            type: string
+            pattern: "[A-Za-z0-9 ,.!?-]{20,200}"
+        - weight: 1
+          schema: { type: constant, value: null }
+    image:
+      type: function
+      expression: "'https://assets.ui.sh/avatars/' + string(n) + '.webp'"
+      variables:
+        n:
+          type: number
+          minimum: 1
+          maximum: 100
+          scale: 0
+    created_by_user_id:
+      type: function
+      expression: user.id
+      variables:
+        user:
+          type: reference
+          effect: users.create
+    created_at:
+      type: context
+      path: ["clock", "now"]
+    updated_at:
+      type: context
+      path: ["clock", "now"]
+    deleted_at:
+      type: constant
+      value: null
