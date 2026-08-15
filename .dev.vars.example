@@ -1,4 +1,4 @@
-DATABASE_URL=postgresql://postgres@localhost/takeoff
+DATABASE_URL=postgresql://postgres:password@localhost/takeoff
 USE_LOCAL_DB=true
 BETTER_AUTH_SECRET=
 BETTER_AUTH_URL=

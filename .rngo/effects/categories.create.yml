@@ -1,4 +1,5 @@
-trigger: hz(1, month)
+trigger: hz(4, day)
+end: now - days(29)
 channel: db
 metadata:
   table: categories
