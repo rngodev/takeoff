@@ -12,6 +12,7 @@ schema:
         take:
           type: reference
           effect: takes.create
+          cursor: unique
     category_id:
       type: function
       expression: category.id

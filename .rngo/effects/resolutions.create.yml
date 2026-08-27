@@ -15,6 +15,7 @@ schema:
         take:
           type: reference
           effect: takes.create
+          cursor: unique
     outcome:
       type: select
       options:
