@@ -1,0 +1,69 @@
+trigger: hz(1, hour)
+channel: db
+metadata:
+  table: resolutions
+schema:
+  type: object
+  properties:
+    id:
+      type: string
+      pattern: "[a-zA-Z0-9]{32}"
+    take_id:
+      type: function
+      expression: take.id
+      variables:
+        take:
+          type: reference
+          effect: takes.create
+          cursor: unique
+    outcome:
+      type: select
+      options:
+        - weight: 4
+          schema: { type: constant, value: correct }
+        - weight: 3
+          schema: { type: constant, value: incorrect }
+        - weight: 1
+          schema: { type: constant, value: void }
+    notes:
+      type: select
+      options:
+        - weight: 2
+          schema:
+            type: string
+            pattern: "[A-Za-z0-9 ,.!?-]{20,200}"
+        - weight: 1
+          schema: { type: constant, value: null }
+    source:
+      type: select
+      options:
+        - weight: 2
+          schema:
+            type: function
+            expression: "'https://' + host + '.com/' + string(n)"
+            variables:
+              host:
+                type: select
+                options:
+                  - schema: { type: constant, value: "twitter" }
+                  - schema: { type: constant, value: "espn" }
+              n:
+                type: number
+                minimum: 100000
+                maximum: 999999
+                scale: 0
+        - weight: 1
+          schema: { type: constant, value: null }
+    created_by_user_id:
+      type: function
+      expression: user.id
+      variables:
+        user:
+          type: reference
+          effect: users.create
+    created_at:
+      type: context
+      path: ["clock", "now"]
+    deleted_at:
+      type: constant
+      value: null

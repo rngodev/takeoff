@@ -1,0 +1,86 @@
+trigger: hz(3, hour)
+channel: db
+metadata:
+  table: takes
+schema:
+  type: object
+  properties:
+    id:
+      type: string
+      pattern: "[a-zA-Z0-9]{32}"
+    slug:
+      type: function
+      expression: "base + '-' + suffix"
+      variables:
+        base:
+          type: string
+          pattern: "[a-z0-9]{4,24}"
+        suffix:
+          type: string
+          pattern: "[a-z0-9]{6,8}"
+    pundit_id:
+      type: function
+      expression: pundit.id
+      variables:
+        pundit:
+          type: reference
+          effect: pundits.create
+    headline:
+      type: string
+      pattern: "[A-Za-z0-9 ,.!?-]{20,150}"
+    details:
+      type: select
+      options:
+        - weight: 1
+          schema:
+            type: string
+            pattern: "[A-Za-z0-9 ,.!?-]{50,500}"
+        - weight: 2
+          schema: { type: constant, value: null }
+    kind:
+      type: select
+      options:
+        - weight: 1
+          schema: { type: constant, value: objective }
+        - weight: 2
+          schema: { type: constant, value: subjective }
+    source:
+      type: select
+      options:
+        - weight: 3
+          schema:
+            type: function
+            expression: "'https://' + host + '.com/' + string(n)"
+            variables:
+              host:
+                type: select
+                options:
+                  - schema: { type: constant, value: "twitter" }
+                  - schema: { type: constant, value: "youtube" }
+                  - schema: { type: constant, value: "espn" }
+              n:
+                type: number
+                minimum: 100000
+                maximum: 999999
+                scale: 0
+        - weight: 1
+          schema: { type: constant, value: null }
+    stated_at:
+      type: context
+      path: ["clock", "now"]
+    created_by_user_id:
+      type: function
+      expression: user.id
+      variables:
+        user:
+          type: reference
+          effect: users.create
+    created_at:
+      type: context
+      path: ["clock", "now"]
+    updated_at:
+      type: context
+      path: ["clock", "now"]
+    deleted_at:
+      type: constant
+      value: null
