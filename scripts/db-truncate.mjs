@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // Truncates every table in the public schema of the local dev database.
-// Requires DATABASE_URL in the shell (same convention as `db:migrate`).
+// Reads DATABASE_URL from the shell, falling back to .env.
+import "dotenv/config";
 import postgres from "postgres";
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
-  console.error("DATABASE_URL is not set. Export it before running this script.");
+  console.error("DATABASE_URL is not set. Export it or add it to .env.");
   process.exit(1);
 }
 
