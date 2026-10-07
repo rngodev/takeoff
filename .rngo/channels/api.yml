@@ -1,6 +1,8 @@
 format:
   type: template
   template: >-
-    curl -sS --fail-with-body -X {{data.method}} "${API_BASE_URL:-http://localhost:5173}{{{data.path}}}"
+    curl -sS --fail-with-body -X {{data.method}} "${API_BASE_URL:-http://localhost:5173}{{data.path}}"
+    -H "Origin: ${API_BASE_URL:-http://localhost:5173}"
+    {{#if data.body}}-H 'Content-Type: application/json' --data '{{json data.body}}'{{/if}}
 target:
   type: exec
