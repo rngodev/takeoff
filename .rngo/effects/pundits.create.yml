@@ -19,8 +19,7 @@ schema:
           type: string
           pattern: "[a-z0-9]{6,8}"
     name:
-      type: string
-      pattern: "[A-Za-z]{3,12} [A-Za-z]{3,15}"
+      type: person-name
     url:
       type: select
       options:

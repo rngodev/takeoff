@@ -1,0 +1,132 @@
+schema:
+  type: function
+  expression: quantifier + ' ' + subject + ' are ' + description
+  variables:
+    quantifier:
+      type: select
+      options:
+        - weight: 5
+          schema: { type: constant, value: "All" }
+        - weight: 5
+          schema: { type: constant, value: "No" }
+        - weight: 2
+          schema: { type: constant, value: "Most" }
+        - weight: 1
+          schema: { type: constant, value: "Few" }
+        - weight: 1
+          schema: { type: constant, value: "Some" }
+    subject:
+      type: select
+      options:
+        - schema: { type: constant, value: "quarterbacks" }
+        - schema: { type: constant, value: "point guards" }
+        - schema: { type: constant, value: "goalkeepers" }
+        - schema: { type: constant, value: "rookies" }
+        - schema: { type: constant, value: "head coaches" }
+        - schema: { type: constant, value: "general managers" }
+        - schema: { type: constant, value: "veteran pitchers" }
+        - schema: { type: constant, value: "power forwards" }
+        - schema: { type: constant, value: "defensive linemen" }
+        - schema: { type: constant, value: "team owners" }
+        - schema: { type: constant, value: "referees" }
+        - schema: { type: constant, value: "sports agents" }
+        - schema: { type: constant, value: "fantasy football players" }
+        - schema: { type: constant, value: "free agents" }
+        - schema: { type: constant, value: "second-round draft picks" }
+        - schema: { type: constant, value: "backup quarterbacks" }
+        - schema: { type: constant, value: "shortstops" }
+        - schema: { type: constant, value: "wide receivers" }
+        - schema: { type: constant, value: "center backs" }
+        - schema: { type: constant, value: "sports broadcasters" }
+        - schema: { type: constant, value: "podcast hosts" }
+        - schema: { type: constant, value: "political pundits" }
+        - schema: { type: constant, value: "cable news anchors" }
+        - schema: { type: constant, value: "economists" }
+        - schema: { type: constant, value: "tech CEOs" }
+        - schema: { type: constant, value: "venture capitalists" }
+        - schema: { type: constant, value: "startup founders" }
+        - schema: { type: constant, value: "crypto traders" }
+        - schema: { type: constant, value: "movie critics" }
+        - schema: { type: constant, value: "streaming services" }
+        - schema: { type: constant, value: "sequels" }
+        - schema: { type: constant, value: "superhero movies" }
+        - schema: { type: constant, value: "reality TV shows" }
+        - schema: { type: constant, value: "late-night hosts" }
+        - schema: { type: constant, value: "pop stars" }
+        - schema: { type: constant, value: "indie bands" }
+        - schema: { type: constant, value: "video game studios" }
+        - schema: { type: constant, value: "mobile games" }
+        - schema: { type: constant, value: "electric cars" }
+        - schema: { type: constant, value: "self-driving cars" }
+        - schema: { type: constant, value: "smartphones" }
+        - schema: { type: constant, value: "smartwatches" }
+        - schema: { type: constant, value: "AI chatbots" }
+        - schema: { type: constant, value: "social media influencers" }
+        - schema: { type: constant, value: "food bloggers" }
+        - schema: { type: constant, value: "meal kit services" }
+        - schema: { type: constant, value: "craft breweries" }
+        - schema: { type: constant, value: "coffee shops" }
+        - schema: { type: constant, value: "open offices" }
+        - schema: { type: constant, value: "remote workers" }
+        - schema: { type: constant, value: "college football programs" }
+        - schema: { type: constant, value: "Olympic athletes" }
+        - schema: { type: constant, value: "esports teams" }
+        - schema: { type: constant, value: "chess grandmasters" }
+        - schema: { type: constant, value: "marathon runners" }
+        - schema: { type: constant, value: "cyclists" }
+        - schema: { type: constant, value: "golf analysts" }
+        - schema: { type: constant, value: "stock market forecasters" }
+        - schema: { type: constant, value: "weather forecasters" }
+        - schema: { type: constant, value: "film directors" }
+        - schema: { type: constant, value: "book authors" }
+    description:
+      type: select
+      options:
+        - schema: { type: constant, value: "overrated" }
+        - schema: { type: constant, value: "underrated" }
+        - schema: { type: constant, value: "secretly brilliant" }
+        - schema: { type: constant, value: "overpaid" }
+        - schema: { type: constant, value: "a waste of money" }
+        - schema: { type: constant, value: "the future of the industry" }
+        - schema: { type: constant, value: "destined to flop" }
+        - schema: { type: constant, value: "ruining the game" }
+        - schema: { type: constant, value: "better than their reputation suggests" }
+        - schema: { type: constant, value: "worse than they were ten years ago" }
+        - schema: { type: constant, value: "not built for the playoffs" }
+        - schema: { type: constant, value: "a safe bet" }
+        - schema: { type: constant, value: "a ticking time bomb" }
+        - schema: { type: constant, value: "too reliant on hype" }
+        - schema: { type: constant, value: "about to break out" }
+        - schema: { type: constant, value: "past their prime" }
+        - schema: { type: constant, value: "better off retired" }
+        - schema: { type: constant, value: "impossible to replace" }
+        - schema: { type: constant, value: "completely interchangeable" }
+        - schema: { type: constant, value: "the most important people in the room" }
+        - schema: { type: constant, value: "a bubble waiting to burst" }
+        - schema: { type: constant, value: "dominant when it counts" }
+        - schema: { type: constant, value: "a lock for the hall of fame" }
+        - schema: { type: constant, value: "terrible in clutch moments" }
+        - schema: { type: constant, value: "trending in the wrong direction" }
+        - schema: { type: constant, value: "more talented than anyone admits" }
+        - schema: { type: constant, value: "playing it too safe" }
+        - schema: { type: constant, value: "a product of good marketing" }
+        - schema: { type: constant, value: "a net negative for the league" }
+        - schema: { type: constant, value: "the best value in the market" }
+        - schema: { type: constant, value: "exactly as good as advertised" }
+        - schema: { type: constant, value: "not ready for primetime" }
+        - schema: { type: constant, value: "a generational talent" }
+        - schema: { type: constant, value: "easy to underestimate" }
+        - schema: { type: constant, value: "a disaster in the making" }
+        - schema: { type: constant, value: "a little too predictable" }
+        - schema: { type: constant, value: "better than their stats show" }
+        - schema: { type: constant, value: "fooling everybody" }
+        - schema: { type: constant, value: "getting too much credit" }
+        - schema: { type: constant, value: "here to stay" }
+        - schema: { type: constant, value: "a decade away from relevance" }
+        - schema: { type: constant, value: "the real story of the season" }
+        - schema: { type: constant, value: "all hype and no substance" }
+        - schema: { type: constant, value: "due for a correction" }
+        - schema: { type: constant, value: "the unsung heroes" }
+        - schema: { type: constant, value: "doing more harm than good" }
+        - schema: { type: constant, value: "mostly just lucky" }
+        - schema: { type: constant, value: "as good as it gets" }
