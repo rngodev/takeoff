@@ -1,0 +1,17 @@
+trigger: hz(15, minute)
+start: now
+end: now + minutes(3)
+channel: api
+schema:
+  type: object
+  properties:
+    method:
+      type: constant
+      value: GET
+    path:
+      type: function
+      expression: "'/api/takes/' + take.slug"
+      variables:
+        take:
+          type: reference
+          effect: takes.create
