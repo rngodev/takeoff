@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 type Take = {
   id: string;
@@ -92,7 +93,12 @@ export default function Home() {
     new Map(
       takes.map((t) => [
         t.punditId,
-        { id: t.punditId, name: t.punditName, image: t.punditImage },
+        {
+          id: t.punditId,
+          slug: t.punditSlug,
+          name: t.punditName,
+          image: t.punditImage,
+        },
       ]),
     ).values(),
   );
@@ -114,26 +120,26 @@ export default function Home() {
       <header className="bg-zinc-950 border-b border-white/5">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 items-center justify-between">
-            <a
-              href="/"
+            <Link
+              to="/"
               aria-label="Homepage"
               className="font-marker text-3xl text-sky-400"
             >
               Takeoff
-            </a>
+            </Link>
             <nav className="hidden sm:flex items-center gap-6">
-              <a
-                href="/"
+              <Link
+                to="/"
                 className="text-sm text-zinc-400 hover:text-sky-400 transition-colors"
               >
                 Takes
-              </a>
-              <a
-                href="/"
+              </Link>
+              <Link
+                to="/"
                 className="text-sm text-zinc-400 hover:text-sky-400 transition-colors"
               >
                 Pundits
-              </a>
+              </Link>
             </nav>
             <button
               className="sm:hidden -mr-2 p-2 text-zinc-400"
@@ -158,12 +164,12 @@ export default function Home() {
         </div>
         {mobileOpen && (
           <div className="sm:hidden bg-zinc-950 border-t border-white/5 px-4 py-3 flex flex-col gap-3">
-            <a href="/" className="text-sm text-zinc-300">
+            <Link to="/" className="text-sm text-zinc-300">
               Takes
-            </a>
-            <a href="/" className="text-sm text-zinc-300">
+            </Link>
+            <Link to="/" className="text-sm text-zinc-300">
               Pundits
-            </a>
+            </Link>
           </div>
         )}
       </header>
@@ -180,9 +186,10 @@ export default function Home() {
         {!loading && uniquePundits.length > 0 && (
           <div className="mt-8 flex flex-wrap gap-2">
             {uniquePundits.map((pundit) => (
-              <div
+              <Link
                 key={pundit.id}
-                className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5"
+                to={`/pundits/${pundit.slug}`}
+                className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 transition-colors hover:border-sky-300"
               >
                 <Avatar
                   src={pundit.image}
@@ -192,7 +199,7 @@ export default function Home() {
                 <span className="text-sm text-zinc-700">
                   {pundit.name.split(" ")[0]}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         )}
@@ -252,11 +259,19 @@ export default function Home() {
                           className="size-8 mt-0.5 shrink-0"
                         />
                         <div>
-                          <p className="text-sm font-medium text-zinc-900 text-pretty whitespace-normal max-w-xs">
+                          <Link
+                            to={`/takes/${take.slug}`}
+                            className="text-sm font-medium text-zinc-900 hover:text-sky-600 text-pretty whitespace-normal max-w-xs inline-block transition-colors"
+                          >
                             {take.headline}
-                          </p>
+                          </Link>
                           <p className="mt-0.5 text-sm text-zinc-500">
-                            {take.punditName}
+                            <Link
+                              to={`/pundits/${take.punditSlug}`}
+                              className="hover:text-sky-600 transition-colors"
+                            >
+                              {take.punditName}
+                            </Link>
                           </p>
                         </div>
                       </div>
