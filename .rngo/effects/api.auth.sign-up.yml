@@ -1,0 +1,25 @@
+trigger: hz(3, minute)
+start: now
+end: now + minutes(3)
+channel: api
+schema:
+  type: object
+  properties:
+    method: { type: constant, value: POST }
+    path: { type: constant, value: /api/auth/sign-up/email }
+    body:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: "[A-Za-z]{3,12} [A-Za-z]{3,15}"
+        email:
+          type: function
+          expression: "local + '@example.com'"
+          variables:
+            local:
+              type: string
+              pattern: "[a-z0-9]{10,16}"
+        password:
+          type: string
+          pattern: "[A-Za-z0-9]{12,24}"

@@ -1,0 +1,5 @@
+type: sql
+query: >
+  select count(*) from outputs
+  where channel = 'api' and level = 'error';
+expect: result == 0

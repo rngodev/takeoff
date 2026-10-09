@@ -1,0 +1,15 @@
+trigger: hz(8, minute)
+start: now
+end: now + minutes(3)
+channel: api
+schema:
+  type: object
+  properties:
+    method: { type: constant, value: GET }
+    path:
+      type: function
+      expression: "'/api/pundits/' + pundit.slug"
+      variables:
+        pundit:
+          type: reference
+          effect: pundits.create

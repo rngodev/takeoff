@@ -1,0 +1,9 @@
+trigger: hz(10, minute)
+start: now
+end: now + minutes(3)
+channel: api
+schema:
+  type: object
+  properties:
+    method: { type: constant, value: GET }
+    path: { type: constant, value: /api/takes }

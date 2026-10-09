@@ -26,15 +26,13 @@ schema:
           type: reference
           effect: pundits.create
     headline:
-      type: string
-      pattern: "[A-Za-z0-9 ,.!?-]{20,150}"
+      type: take-headline
     details:
       type: select
       options:
         - weight: 1
           schema:
-            type: string
-            pattern: "[A-Za-z0-9 ,.!?-]{50,500}"
+            type: lorem-paragraph
         - weight: 2
           schema: { type: constant, value: null }
     kind:
