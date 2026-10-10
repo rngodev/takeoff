@@ -1,0 +1,19 @@
+type: sql
+query: >
+  select count(*)
+  from inputs g
+  left join outputs o
+    on o.input_id = g.id and o.channel = 'api'
+  left join inputs p
+    on p.effect = 'pundits.create'
+    and p.data ->> '$.slug' = substr(g.data ->> '$.path', length('/api/pundits/') + 1)
+  where g.effect = 'api.pundits.get'
+  and (o.data ->> '$.pundit.name' is null
+    or p.data ->> '$.id' is null
+    or o.data ->> '$.pundit.id' is not p.data ->> '$.id'
+    or o.data ->> '$.pundit.slug' is not p.data ->> '$.slug'
+    or o.data ->> '$.pundit.name' is not p.data ->> '$.name'
+    or o.data ->> '$.pundit.description' is not p.data ->> '$.description'
+    or o.data ->> '$.pundit.image' is not p.data ->> '$.image'
+    or o.data ->> '$.pundit.url' is not p.data ->> '$.url');
+expect: result == 0
