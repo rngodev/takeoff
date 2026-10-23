@@ -2,7 +2,7 @@ trigger: hz(20, hour)
 channel: db
 metadata:
   table: positions
-schema:
+generator:
   type: object
   properties:
     id:
@@ -26,9 +26,9 @@ schema:
       type: select
       options:
         - weight: 3
-          schema: { type: constant, value: agree }
+          generator: { type: constant, value: agree }
         - weight: 2
-          schema: { type: constant, value: disagree }
+          generator: { type: constant, value: disagree }
     created_at:
       type: context
       path: ["clock", "now"]

@@ -2,7 +2,7 @@ trigger: hz(2, hour)
 channel: db
 metadata:
   table: users
-schema:
+generator:
   type: object
   properties:
     id:
@@ -26,25 +26,25 @@ schema:
           type: select
           options:
             - weight: 3
-              schema: { type: constant, value: "gmail.com" }
+              generator: { type: constant, value: "gmail.com" }
             - weight: 2
-              schema: { type: constant, value: "yahoo.com" }
+              generator: { type: constant, value: "yahoo.com" }
             - weight: 2
-              schema: { type: constant, value: "outlook.com" }
-            - schema: { type: constant, value: "icloud.com" }
-            - schema: { type: constant, value: "proton.me" }
+              generator: { type: constant, value: "outlook.com" }
+            - generator: { type: constant, value: "icloud.com" }
+            - generator: { type: constant, value: "proton.me" }
     email_verified:
       type: select
       options:
         - weight: 7
-          schema: { type: constant, value: true }
+          generator: { type: constant, value: true }
         - weight: 3
-          schema: { type: constant, value: false }
+          generator: { type: constant, value: false }
     image:
       type: select
       options:
         - weight: 3
-          schema:
+          generator:
             type: function
             expression: "'https://assets.ui.sh/avatars/' + string(n) + '.webp'"
             variables:
@@ -54,7 +54,7 @@ schema:
                 maximum: 100
                 scale: 0
         - weight: 1
-          schema: { type: constant, value: null }
+          generator: { type: constant, value: null }
     created_at:
       type: context
       path: ["clock", "now"]

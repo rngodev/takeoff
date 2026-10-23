@@ -3,7 +3,7 @@ end: now - days(29)
 channel: db
 metadata:
   table: categories
-schema:
+generator:
   type: object
   properties:
     id:

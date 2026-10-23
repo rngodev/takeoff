@@ -2,7 +2,7 @@ trigger: hz(5, hour)
 channel: db
 metadata:
   table: pundit_follows
-schema:
+generator:
   type: object
   properties:
     id:
