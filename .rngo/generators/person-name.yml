@@ -1,0 +1,42 @@
+generator:
+  type: function
+  expression: first + ' ' + last
+  variables:
+    first:
+      type: select
+      options:
+        - generator: { type: constant, value: "Olivia" }
+        - generator: { type: constant, value: "Liam" }
+        - generator: { type: constant, value: "Emma" }
+        - generator: { type: constant, value: "Noah" }
+        - generator: { type: constant, value: "Ava" }
+        - generator: { type: constant, value: "Mateo" }
+        - generator: { type: constant, value: "Sofia" }
+        - generator: { type: constant, value: "Amir" }
+        - generator: { type: constant, value: "Priya" }
+        - generator: { type: constant, value: "Wei" }
+        - generator: { type: constant, value: "Aisha" }
+        - generator: { type: constant, value: "Diego" }
+        - generator: { type: constant, value: "Yuki" }
+        - generator: { type: constant, value: "Fatima" }
+        - generator: { type: constant, value: "Jamal" }
+        - generator: { type: constant, value: "Chloe" }
+    last:
+      type: select
+      options:
+        - generator: { type: constant, value: "Johnson" }
+        - generator: { type: constant, value: "Garcia" }
+        - generator: { type: constant, value: "Nguyen" }
+        - generator: { type: constant, value: "Patel" }
+        - generator: { type: constant, value: "Kim" }
+        - generator: { type: constant, value: "Okafor" }
+        - generator: { type: constant, value: "Rossi" }
+        - generator: { type: constant, value: "Schmidt" }
+        - generator: { type: constant, value: "Hassan" }
+        - generator: { type: constant, value: "Tanaka" }
+        - generator: { type: constant, value: "Martinez" }
+        - generator: { type: constant, value: "Cohen" }
+        - generator: { type: constant, value: "Williams" }
+        - generator: { type: constant, value: "Silva" }
+        - generator: { type: constant, value: "Dubois" }
+        - generator: { type: constant, value: "Ivanov" }

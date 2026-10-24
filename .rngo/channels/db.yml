@@ -1,5 +1,4 @@
 format:
   type: sql
-target:
-  type: stream
-  command: psql -q $DATABASE_URL
+type: stream
+command: psql -q $DATABASE_URL

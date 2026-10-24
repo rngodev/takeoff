@@ -2,7 +2,7 @@ trigger: hz(1, day)
 channel: db
 metadata:
   table: pundits
-schema:
+generator:
   type: object
   properties:
     id:
@@ -24,7 +24,7 @@ schema:
       type: select
       options:
         - weight: 3
-          schema:
+          generator:
             type: function
             expression: "'https://' + host + '.com'"
             variables:
@@ -32,16 +32,16 @@ schema:
                 type: string
                 pattern: "[a-z]{4,12}"
         - weight: 1
-          schema: { type: constant, value: null }
+          generator: { type: constant, value: null }
     description:
       type: select
       options:
         - weight: 3
-          schema:
+          generator:
             type: string
             pattern: "[A-Za-z0-9 ,.!?-]{20,200}"
         - weight: 1
-          schema: { type: constant, value: null }
+          generator: { type: constant, value: null }
     image:
       type: function
       expression: "'https://assets.ui.sh/avatars/' + string(n) + '.webp'"

@@ -2,7 +2,7 @@ trigger: hz(4, hour)
 channel: db
 metadata:
   table: take_categories
-schema:
+generator:
   type: object
   properties:
     take_id:
