@@ -3,7 +3,7 @@ query: >
   select count(*)
   from inputs g
   left join outputs o
-    on o.input_id = g.id and o.channel = 'api'
+    on o.input_id = g.id and o.channel = 'api' and json_valid(o.data)
   left join inputs t
     on t.effect = 'takes.create'
     and t.data ->> '$.slug' = substr(g.data ->> '$.path', length('/api/takes/') + 1)
