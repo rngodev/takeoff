@@ -1,0 +1,132 @@
+generator:
+  type: function
+  expression: quantifier + ' ' + subject + ' are ' + description
+  variables:
+    quantifier:
+      type: select
+      options:
+        - weight: 5
+          generator: { type: constant, value: "All" }
+        - weight: 5
+          generator: { type: constant, value: "No" }
+        - weight: 2
+          generator: { type: constant, value: "Most" }
+        - weight: 1
+          generator: { type: constant, value: "Few" }
+        - weight: 1
+          generator: { type: constant, value: "Some" }
+    subject:
+      type: select
+      options:
+        - generator: { type: constant, value: "quarterbacks" }
+        - generator: { type: constant, value: "point guards" }
+        - generator: { type: constant, value: "goalkeepers" }
+        - generator: { type: constant, value: "rookies" }
+        - generator: { type: constant, value: "head coaches" }
+        - generator: { type: constant, value: "general managers" }
+        - generator: { type: constant, value: "veteran pitchers" }
+        - generator: { type: constant, value: "power forwards" }
+        - generator: { type: constant, value: "defensive linemen" }
+        - generator: { type: constant, value: "team owners" }
+        - generator: { type: constant, value: "referees" }
+        - generator: { type: constant, value: "sports agents" }
+        - generator: { type: constant, value: "fantasy football players" }
+        - generator: { type: constant, value: "free agents" }
+        - generator: { type: constant, value: "second-round draft picks" }
+        - generator: { type: constant, value: "backup quarterbacks" }
+        - generator: { type: constant, value: "shortstops" }
+        - generator: { type: constant, value: "wide receivers" }
+        - generator: { type: constant, value: "center backs" }
+        - generator: { type: constant, value: "sports broadcasters" }
+        - generator: { type: constant, value: "podcast hosts" }
+        - generator: { type: constant, value: "political pundits" }
+        - generator: { type: constant, value: "cable news anchors" }
+        - generator: { type: constant, value: "economists" }
+        - generator: { type: constant, value: "tech CEOs" }
+        - generator: { type: constant, value: "venture capitalists" }
+        - generator: { type: constant, value: "startup founders" }
+        - generator: { type: constant, value: "crypto traders" }
+        - generator: { type: constant, value: "movie critics" }
+        - generator: { type: constant, value: "streaming services" }
+        - generator: { type: constant, value: "sequels" }
+        - generator: { type: constant, value: "superhero movies" }
+        - generator: { type: constant, value: "reality TV shows" }
+        - generator: { type: constant, value: "late-night hosts" }
+        - generator: { type: constant, value: "pop stars" }
+        - generator: { type: constant, value: "indie bands" }
+        - generator: { type: constant, value: "video game studios" }
+        - generator: { type: constant, value: "mobile games" }
+        - generator: { type: constant, value: "electric cars" }
+        - generator: { type: constant, value: "self-driving cars" }
+        - generator: { type: constant, value: "smartphones" }
+        - generator: { type: constant, value: "smartwatches" }
+        - generator: { type: constant, value: "AI chatbots" }
+        - generator: { type: constant, value: "social media influencers" }
+        - generator: { type: constant, value: "food bloggers" }
+        - generator: { type: constant, value: "meal kit services" }
+        - generator: { type: constant, value: "craft breweries" }
+        - generator: { type: constant, value: "coffee shops" }
+        - generator: { type: constant, value: "open offices" }
+        - generator: { type: constant, value: "remote workers" }
+        - generator: { type: constant, value: "college football programs" }
+        - generator: { type: constant, value: "Olympic athletes" }
+        - generator: { type: constant, value: "esports teams" }
+        - generator: { type: constant, value: "chess grandmasters" }
+        - generator: { type: constant, value: "marathon runners" }
+        - generator: { type: constant, value: "cyclists" }
+        - generator: { type: constant, value: "golf analysts" }
+        - generator: { type: constant, value: "stock market forecasters" }
+        - generator: { type: constant, value: "weather forecasters" }
+        - generator: { type: constant, value: "film directors" }
+        - generator: { type: constant, value: "book authors" }
+    description:
+      type: select
+      options:
+        - generator: { type: constant, value: "overrated" }
+        - generator: { type: constant, value: "underrated" }
+        - generator: { type: constant, value: "secretly brilliant" }
+        - generator: { type: constant, value: "overpaid" }
+        - generator: { type: constant, value: "a waste of money" }
+        - generator: { type: constant, value: "the future of the industry" }
+        - generator: { type: constant, value: "destined to flop" }
+        - generator: { type: constant, value: "ruining the game" }
+        - generator: { type: constant, value: "better than their reputation suggests" }
+        - generator: { type: constant, value: "worse than they were ten years ago" }
+        - generator: { type: constant, value: "not built for the playoffs" }
+        - generator: { type: constant, value: "a safe bet" }
+        - generator: { type: constant, value: "a ticking time bomb" }
+        - generator: { type: constant, value: "too reliant on hype" }
+        - generator: { type: constant, value: "about to break out" }
+        - generator: { type: constant, value: "past their prime" }
+        - generator: { type: constant, value: "better off retired" }
+        - generator: { type: constant, value: "impossible to replace" }
+        - generator: { type: constant, value: "completely interchangeable" }
+        - generator: { type: constant, value: "the most important people in the room" }
+        - generator: { type: constant, value: "a bubble waiting to burst" }
+        - generator: { type: constant, value: "dominant when it counts" }
+        - generator: { type: constant, value: "a lock for the hall of fame" }
+        - generator: { type: constant, value: "terrible in clutch moments" }
+        - generator: { type: constant, value: "trending in the wrong direction" }
+        - generator: { type: constant, value: "more talented than anyone admits" }
+        - generator: { type: constant, value: "playing it too safe" }
+        - generator: { type: constant, value: "a product of good marketing" }
+        - generator: { type: constant, value: "a net negative for the league" }
+        - generator: { type: constant, value: "the best value in the market" }
+        - generator: { type: constant, value: "exactly as good as advertised" }
+        - generator: { type: constant, value: "not ready for primetime" }
+        - generator: { type: constant, value: "a generational talent" }
+        - generator: { type: constant, value: "easy to underestimate" }
+        - generator: { type: constant, value: "a disaster in the making" }
+        - generator: { type: constant, value: "a little too predictable" }
+        - generator: { type: constant, value: "better than their stats show" }
+        - generator: { type: constant, value: "fooling everybody" }
+        - generator: { type: constant, value: "getting too much credit" }
+        - generator: { type: constant, value: "here to stay" }
+        - generator: { type: constant, value: "a decade away from relevance" }
+        - generator: { type: constant, value: "the real story of the season" }
+        - generator: { type: constant, value: "all hype and no substance" }
+        - generator: { type: constant, value: "due for a correction" }
+        - generator: { type: constant, value: "the unsung heroes" }
+        - generator: { type: constant, value: "doing more harm than good" }
+        - generator: { type: constant, value: "mostly just lucky" }
+        - generator: { type: constant, value: "as good as it gets" }
