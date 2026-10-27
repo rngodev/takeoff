@@ -24,7 +24,9 @@ takeoff/
 ├── src/              # React frontend
 │   ├── main.tsx      # entry point (imports sentry.ts first)
 │   ├── sentry.ts     # frontend Sentry.init
-│   ├── index.css     # @import "tailwindcss"
+│   ├── index.css     # Tailwind + design tokens (@theme)
+│   ├── components/
+│   │   └── ui.tsx    # shared UI (header, verdict badge, stats, tables)
 │   └── lib/
 │       └── auth-client.ts  # Better Auth createAuthClient
 ├── worker/           # Cloudflare Worker (Hono backend)
@@ -133,28 +135,15 @@ takeoff tracks pundit takes and community reactions to them.
 
 ## Design System
 
-**Fonts** — Two fonts in play:
-- Body/UI: Geist, loaded via Bunny Fonts. Registered as `--font-geist` in `src/index.css`. Apply `font-geist antialiased` on the root element.
-- Logo: Permanent Marker, loaded from Google Fonts. Registered as `--font-marker`. Apply `font-marker` to the logo link only.
-- Inter is still loaded as `--font-sans` fallback (with OpenType features `cv02`, `cv03`, `cv04`, `cv11`, `ss01`, `ss03`).
+Full brand book: `DESIGN.md`. Summary for writing UI:
 
-**Layout** — Page container is `max-w-4xl mx-auto px-4 sm:px-6 lg:px-8`. Page content starts at `py-10`. Page background is `bg-zinc-50`.
-
-**Navigation** — Dark header: `bg-zinc-950 border-b border-white/5`, `h-14` row. Logo is `font-marker text-3xl text-sky-400`. Nav links are `text-sm text-zinc-400` with `hover:text-sky-400`. Mobile dropdown uses `bg-zinc-950 border-t border-white/5` with `text-zinc-300` links.
-
-**Colors** — Neutral base is `zinc-*`. Primary accent is `sky-400` (interactive elements, logo) / `sky-500` (on light backgrounds). Verdict colors: emerald (correct), red (incorrect), gray (void). Use solid zinc borders (`border-zinc-200`, `divide-zinc-100`, `divide-zinc-200`) on light surfaces; use opacity-based white borders (`border-white/5`) on dark surfaces.
-
-**Stats block** — `grid grid-cols-3 rounded-xl border border-zinc-200 divide-x divide-zinc-200 bg-white`. Each cell: `px-6 py-5`, label `text-sm text-zinc-500`, value `text-3xl font-semibold tabular-nums text-zinc-900`. The "Verified correct" value uses `text-sky-500`.
-
-**Pundit chips** — `rounded-full border border-zinc-200 bg-white px-3 py-1.5` with a `size-5` avatar and `text-sm text-zinc-700` name.
-
-**Avatars** — Sourced from `https://assets.ui.sh/avatars/{id}.webp`. Always add `outline-1 -outline-offset-1 outline-black/5` and `rounded-full object-cover`.
-
-**Tables** — `w-full`, headers `text-sm font-medium text-zinc-500` (sentence case, `whitespace-nowrap`), rows divided by `divide-y divide-zinc-100`, header row `border-b border-zinc-200`. Wrap in responsive scroll container with `-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8` outer / `inline-block min-w-full px-4 py-2 align-middle sm:px-6 lg:px-8` inner.
-
-**Verdict badges** — `rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset`. Pending state: plain `text-sm text-gray-400` text (no badge).
-
-**Typography** — Headings use `font-semibold tracking-tight text-balance` (never `font-bold`). Body/descriptions use `text-pretty`. Numbers use `tabular-nums`.
+- **Tokens are in `src/index.css` (`@theme`) and Tailwind's defaults are cleared.** Only these colours exist: `paper`, `paper-raised`, `ink`, `ink-muted`, `rule`, `rule-strong`, `runway`, `correct`, `incorrect` (e.g. `bg-paper`, `text-ink-muted`, `border-rule`). No `zinc-*`, `sky-*`, `white`, `black`.
+- **Type:** `font-display` (Barlow Condensed) for headlines, labels, stamps and big numbers; `font-sans` (Barlow) for reading. Sizes are named styles: `text-display`, `text-headline`, `text-title`, `text-stat`, `text-body`, `text-meta`, `text-label` (uppercase). Numbers use `tabular-nums`.
+- **Shape:** `rounded-sm` controls/stamps/chips, `rounded-md` cards and stat blocks, `rounded-pill` avatars and meters only. Hairline `border-rule`, never shadows.
+- **Reuse `src/components/ui.tsx`** (`PageShell`, `SiteHeader`, `VerdictBadge`, `KindTag`, `PunditChip`, `Avatar`, `StatGrid`, `Meter`, `TakesTable`, `BackLink`) rather than restyling per page.
+- **Verdicts** read Correct / Incorrect / Void / Pending, matching `resolution_outcome`. Always glyph + word, never colour alone.
+- `runway` yellow is a highlighter: a fill under `ink` text or an accent on the `ink` header. Never text on paper.
+- After changing tokens, update `DESIGN.md` and re-sync the Takeoff design system artifact.
 
 ## Adding Features
 

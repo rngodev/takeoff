@@ -1,9 +1,73 @@
 @import "tailwindcss";
 
+/*
+ * Takeoff design tokens — the source of truth for the Takeoff design system.
+ * Brand book and usage rules: DESIGN.md. Change values here, then re-sync the
+ * design system artifact from this repo.
+ *
+ * Tailwind's default palette, fonts, type scale and radii are cleared so only
+ * these tokens exist. Spacing keeps Tailwind's 4px step (p-1 = 4px, p-2 = 8px,
+ * p-4 = 16px, p-8 = 32px are the system's space-1/2/4/8).
+ */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01", "ss03";
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
 
-  --font-geist: "Geist", sans-serif;
-  --font-marker: "Permanent Marker", cursive;
+  /* Colour — one light "newsprint" theme */
+  --color-paper: #f3eee3; /* page background */
+  --color-paper-raised: #fbf8f1; /* cards, tables, inputs on paper */
+  --color-ink: #17140f; /* text, numbers, header bar, focus ring */
+  --color-ink-muted: #5a5347; /* meta text: bylines, dates, labels */
+  --color-rule: #d4cab6; /* decorative hairlines only */
+  --color-rule-strong: #8f8573; /* control borders (3:1 on paper) */
+  --color-runway: #f5c518; /* brand highlighter: fills under ink, text on ink */
+  --color-correct: #1f5aa6; /* verdict: correct */
+  --color-incorrect: #b8361b; /* verdict: incorrect */
+
+  /* Type — Barlow Condensed for headlines and numbers, Barlow for reading */
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-sans: "Barlow", system-ui, sans-serif;
+
+  --text-display: 64px;
+  --text-display--line-height: 60px;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.01em;
+  --text-headline: 36px;
+  --text-headline--line-height: 38px;
+  --text-headline--font-weight: 700;
+  --text-title: 22px;
+  --text-title--line-height: 26px;
+  --text-title--font-weight: 600;
+  --text-stat: 40px;
+  --text-stat--line-height: 40px;
+  --text-stat--font-weight: 700;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-body--font-weight: 400;
+  --text-meta: 14px;
+  --text-meta--line-height: 20px;
+  --text-meta--font-weight: 500;
+  --text-label: 12px;
+  --text-label--line-height: 16px;
+  --text-label--font-weight: 700;
+  --text-label--letter-spacing: 0.08em;
+
+  /* Shape — square-cornered, like a printed ledger */
+  --radius-sm: 2px; /* stamps, chips, buttons, inputs */
+  --radius-md: 4px; /* cards, stat blocks, menus */
+  --radius-pill: 9999px; /* avatars and meters only */
+}
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
 }
