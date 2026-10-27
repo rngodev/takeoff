@@ -66,7 +66,7 @@ Spacing is Tailwind's 4px step; the system uses `1` (4px), `2` (8px), `4` (16px)
 ## Components (`src/components/ui.tsx`)
 
 - `PageShell` — paper page, `SiteHeader`, centred `max-w-4xl` main.
-- `SiteHeader` / `Logo` — ink bar; the wordmark is "Takeoff" in Barlow Condensed 700 on ink with a short `runway` bar under it that runs full width on hover. There is no logo file yet.
+- `SiteHeader` / `Logo` — ink bar; the wordmark is "Takeoff" in Barlow Condensed 700 on ink with a short `runway` bar under it that runs full width on hover. As files: `assets/takeoff-logo-light.svg` (ink, for light backgrounds) and `assets/takeoff-logo-dark.svg` (paper, for dark), with the lettering converted to outlines so they render without the font.
 - `VerdictBadge` — square stamp per verdict; `Pending` is plain meta text.
 - `KindTag` — outlined uppercase tag (objective / subjective).
 - `PunditChip`, `Avatar` — square-cornered chip with a round avatar.
@@ -76,6 +76,11 @@ Spacing is Tailwind's 4px step; the system uses `1` (4px), `2` (8px), `4` (16px)
 - `BackLink` — muted back link with a chevron.
 
 Links in body text and tables underline on hover with a 2px `runway` decoration. Focus is a 2px `ink` outline, offset 2px (set globally in `index.css`).
+
+## Logo and social image
+
+- `assets/takeoff-logo-light.svg` / `assets/takeoff-logo-dark.svg` — the wordmark with lettering outlined; light for light backgrounds, dark for dark. Never recolour the lettering or the `runway` bar; keep at least the bar's height clear on every side.
+- `assets/takeoff-social-preview.png` — 1280×640 link preview (wordmark, tagline, the runway composition). Set it in GitHub under Settings → Social preview.
 
 ## Iconography
 

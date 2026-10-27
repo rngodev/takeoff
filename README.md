@@ -1,4 +1,9 @@
-# Takeoff
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/takeoff-logo-dark.svg">
+    <img src="assets/takeoff-logo-light.svg" alt="Takeoff" height="64">
+  </picture>
+</h1>
 
 Takeoff is an online community devoted to holding pundits accountable for their takes.
 
