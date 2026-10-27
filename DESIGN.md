@@ -1,6 +1,6 @@
 # Takeoff design system
 
-Every take gets a scorecard. Takeoff logs what pundits predict, waits, and grades them on what actually happened. The look borrows from the sports ledger and the newspaper box score: warm newsprint, black ink, one highlighter yellow, and numbers set to be compared.
+Take accountability. Takeoff is the home of competitive punditry. Takeoff logs what pundits predict, waits, and grades them on what actually happened. The look borrows from the sports ledger and the newspaper box score: warm newsprint, black ink, one highlighter yellow, and numbers set to be compared.
 
 **Source of truth:** the tokens live in `src/index.css` (`@theme`), the shared UI in `src/components/ui.tsx`. This file is the brand book. The design system artifact on claude.ai mirrors this repo; change things here, then re-sync it.
 
