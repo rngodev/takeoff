@@ -72,7 +72,9 @@ export default function Take() {
         }
         return r.json<TakeData>();
       })
-      .then((d) => { if (d) setData(d); })
+      .then((d) => {
+        if (d) setData(d);
+      })
       .finally(() => setLoading(false));
   }, [slug]);
 
@@ -87,12 +89,15 @@ export default function Take() {
   const take = data?.take;
   const moreTakes = data?.moreTakes ?? [];
   const total = (take?.stats.agree ?? 0) + (take?.stats.disagree ?? 0);
-  const agreePct = total > 0 ? Math.round(((take?.stats.agree ?? 0) / total) * 100) : 0;
+  const agreePct =
+    total > 0 ? Math.round(((take?.stats.agree ?? 0) / total) * 100) : 0;
 
   return (
     <PageShell>
       {take ? (
-        <BackLink to={`/pundits/${take.pundit.slug}`}>{take.pundit.name}</BackLink>
+        <BackLink to={`/pundits/${take.pundit.slug}`}>
+          {take.pundit.name}
+        </BackLink>
       ) : (
         <BackLink to="/">All takes</BackLink>
       )}
@@ -112,7 +117,9 @@ export default function Take() {
                   <span className="text-ink-muted" aria-hidden="true">
                     ·
                   </span>
-                  <span className="text-meta text-ink-muted">{take.source}</span>
+                  <span className="text-meta text-ink-muted">
+                    {take.source}
+                  </span>
                 </>
               )}
             </div>
@@ -152,7 +159,10 @@ export default function Take() {
             <StatGrid
               stats={[
                 { label: "Agreed", value: formatNumber(take.stats.agree) },
-                { label: "Disagreed", value: formatNumber(take.stats.disagree) },
+                {
+                  label: "Disagreed",
+                  value: formatNumber(take.stats.disagree),
+                },
                 { label: "Boosted", value: formatNumber(take.stats.boosts) },
               ]}
             />

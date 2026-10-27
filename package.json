@@ -14,7 +14,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:truncate": "node scripts/db-truncate.mjs",
-    "wrangler:types": "wrangler types --env-interface CloudflareBindings"
+    "wrangler:types": "wrangler types --env-interface CloudflareBindings",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -46,6 +48,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "dotenv": "^18.0.4",
     "drizzle-kit": "^0.31.10",
+    "prettier": "^3.9.10",
     "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",
     "vite": "^8.0.10",

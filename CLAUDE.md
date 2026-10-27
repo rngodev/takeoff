@@ -3,16 +3,19 @@
 ## Stack
 
 **Frontend**
+
 - React 19 + TypeScript
 - Vite 8 (build tool + dev server)
 - Tailwind CSS v4 (imported via `@import "tailwindcss"` in CSS, no config file needed)
 
 **Backend**
+
 - Hono — API framework running on Cloudflare Workers
 - Better Auth — authentication (email/password, extendable with plugins)
 - Drizzle ORM — TypeScript ORM with Neon HTTP driver
 
 **Infrastructure**
+
 - Cloudflare Workers — hosts the Hono API and serves the React SPA as static assets
 - Neon — serverless PostgreSQL
 - Sentry — error monitoring (separate projects for frontend and backend)
@@ -61,11 +64,11 @@ takeoff/
 
 Three tsconfig targets using project references:
 
-| Config | Covers | Key types |
-|---|---|---|
-| `tsconfig.app.json` | `src/` | `vite/client`, DOM |
-| `tsconfig.worker.json` | `worker/`, `db/` | `@cloudflare/workers-types` |
-| `tsconfig.node.json` | `vite.config.ts`, `drizzle.config.ts` | Node |
+| Config                 | Covers                                | Key types                   |
+| ---------------------- | ------------------------------------- | --------------------------- |
+| `tsconfig.app.json`    | `src/`                                | `vite/client`, DOM          |
+| `tsconfig.worker.json` | `worker/`, `db/`                      | `@cloudflare/workers-types` |
+| `tsconfig.node.json`   | `vite.config.ts`, `drizzle.config.ts` | Node                        |
 
 `CloudflareBindings` is declared in `worker/bindings.d.ts` and merges with the generated `worker-configuration.d.ts`. Re-run `pnpm wrangler:types` after changing `wrangler.toml`.
 
@@ -75,6 +78,8 @@ Three tsconfig targets using project references:
 pnpm dev              # start dev server (reads .dev.vars for secrets)
 pnpm build            # production build
 pnpm typecheck        # tsc across all tsconfigs
+pnpm format           # format the codebase with Prettier
+pnpm format:check     # verify formatting (what CI runs)
 pnpm wrangler:types   # regenerate worker-configuration.d.ts
 
 pnpm db:generate      # generate SQL migrations from schema changes
@@ -89,39 +94,40 @@ wrangler secret put DATABASE_URL   # set a production secret
 
 Local secrets go in `.dev.vars` (gitignored). See `.dev.vars.example` for the required keys.
 
-| Key | Where used | How to set in prod |
-|---|---|---|
-| `DATABASE_URL` | Drizzle + Better Auth | `wrangler secret put` |
-| `BETTER_AUTH_SECRET` | Better Auth signing | `wrangler secret put` |
-| `BETTER_AUTH_URL` | Better Auth base URL + CORS | `wrangler secret put` |
-| `SENTRY_DSN` | Backend Sentry (Worker) | `wrangler secret put` |
-| `VITE_SENTRY_DSN` | Frontend Sentry (browser bundle) | Build-time env var |
-| `VITE_APP_URL` | Better Auth client base URL | Build-time env var |
-| `SENTRY_AUTH_TOKEN` | Source map upload (CI only) | CI secrets |
-| `SENTRY_ORG` | Source map upload (CI only) | CI secrets |
-| `SENTRY_PROJECT` | Source map upload (CI only) | CI secrets |
+| Key                  | Where used                       | How to set in prod    |
+| -------------------- | -------------------------------- | --------------------- |
+| `DATABASE_URL`       | Drizzle + Better Auth            | `wrangler secret put` |
+| `BETTER_AUTH_SECRET` | Better Auth signing              | `wrangler secret put` |
+| `BETTER_AUTH_URL`    | Better Auth base URL + CORS      | `wrangler secret put` |
+| `SENTRY_DSN`         | Backend Sentry (Worker)          | `wrangler secret put` |
+| `VITE_SENTRY_DSN`    | Frontend Sentry (browser bundle) | Build-time env var    |
+| `VITE_APP_URL`       | Better Auth client base URL      | Build-time env var    |
+| `SENTRY_AUTH_TOKEN`  | Source map upload (CI only)      | CI secrets            |
+| `SENTRY_ORG`         | Source map upload (CI only)      | CI secrets            |
+| `SENTRY_PROJECT`     | Source map upload (CI only)      | CI secrets            |
 
 ## Data Model
 
 takeoff tracks pundit takes and community reactions to them.
 
 **Enums**
+
 - `take_kind`: `objective | subjective`
 - `resolution_outcome`: `correct | incorrect | void`
 - `position_stance`: `agree | disagree`
 
 **Core tables**
 
-| Table | Purpose |
-|---|---|
-| `pundits` | Media personalities who make takes |
-| `categories` | Admin-managed taxonomy for takes |
-| `takes` | A prediction or opinion made by a pundit |
+| Table             | Purpose                                    |
+| ----------------- | ------------------------------------------ |
+| `pundits`         | Media personalities who make takes         |
+| `categories`      | Admin-managed taxonomy for takes           |
+| `takes`           | A prediction or opinion made by a pundit   |
 | `take_categories` | Junction table linking takes to categories |
-| `resolutions` | Admin determination of a take's outcome |
-| `positions` | A user's agree/disagree stance on a take |
-| `boosts` | A user flagging a take as interesting |
-| `pundit_follows` | A user following a pundit |
+| `resolutions`     | Admin determination of a take's outcome    |
+| `positions`       | A user's agree/disagree stance on a take   |
+| `boosts`          | A user flagging a take as interesting      |
+| `pundit_follows`  | A user following a pundit                  |
 
 **Soft deletes** — `pundits`, `takes`, `positions`, `boosts`, and `pundit_follows` all have a `deletedAt` column. Active records have `deletedAt IS NULL`. `categories` and `take_categories` hard-delete.
 
@@ -145,6 +151,10 @@ Full brand book: `DESIGN.md`. Summary for writing UI:
 - `runway` yellow is a highlighter: a fill under `ink` text or an accent on the `ink` header. Never text on paper.
 - After changing tokens, update `DESIGN.md` and re-sync the Takeoff design system artifact.
 
+## Formatting
+
+The codebase is formatted with Prettier (default config, ignores in `.prettierignore`). **Always run `pnpm format` before committing.** The `Format` GitHub Action runs `pnpm format:check` on every PR and fails if any file is unformatted.
+
 ## Adding Features
 
 **New API route** — add to `worker/index.ts` under `/api/*`.
@@ -152,6 +162,7 @@ Full brand book: `DESIGN.md`. Summary for writing UI:
 **New database table** — add to `db/schema.ts`, then run `pnpm db:generate && pnpm db:migrate`.
 
 **New auth plugin** — add to the `betterAuth({})` call in both `worker/auth.ts` (runtime) and `better-auth.config.ts` (CLI shim), then re-run schema generation:
+
 ```bash
 pnpm dlx auth@latest generate --config ./better-auth.config.ts --output ./db/schema.ts
 ```

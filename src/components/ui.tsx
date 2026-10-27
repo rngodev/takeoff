@@ -105,7 +105,13 @@ export function SiteHeader() {
   );
 }
 
-export function BackLink({ to, children }: { to: string; children: ReactNode }) {
+export function BackLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: ReactNode;
+}) {
   return (
     <Link
       to={to}
@@ -184,7 +190,11 @@ export function PunditChip({
 
 const verdict = {
   correct: { label: "Correct", glyph: "✓", className: "bg-correct text-paper" },
-  incorrect: { label: "Incorrect", glyph: "✕", className: "bg-incorrect text-paper" },
+  incorrect: {
+    label: "Incorrect",
+    glyph: "✕",
+    className: "bg-incorrect text-paper",
+  },
   void: {
     label: "Void",
     glyph: "–",
@@ -193,7 +203,11 @@ const verdict = {
 } as const;
 
 /** A square verdict stamp. Colour is always paired with a glyph and a word. */
-export function VerdictBadge({ resolution }: { resolution: Resolution | null }) {
+export function VerdictBadge({
+  resolution,
+}: {
+  resolution: Resolution | null;
+}) {
   if (!resolution)
     return (
       <span className="inline-flex items-center gap-1 text-meta text-ink-muted">
@@ -279,17 +293,26 @@ export type TakeRow = {
 };
 
 export function TakesTable({ takes }: { takes: TakeRow[] }) {
-  const th = "whitespace-nowrap py-2 pr-6 text-left font-display text-label uppercase text-ink-muted";
+  const th =
+    "whitespace-nowrap py-2 pr-6 text-left font-display text-label uppercase text-ink-muted";
   return (
     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="inline-block min-w-full px-4 py-2 align-middle sm:px-6 lg:px-8">
         <table className="w-full">
           <thead>
             <tr className="border-b-2 border-ink">
-              <th scope="col" className={th}>Take</th>
-              <th scope="col" className={th}>Kind</th>
-              <th scope="col" className={th}>Date</th>
-              <th scope="col" className={`${th} pr-0`}>Verdict</th>
+              <th scope="col" className={th}>
+                Take
+              </th>
+              <th scope="col" className={th}>
+                Kind
+              </th>
+              <th scope="col" className={th}>
+                Date
+              </th>
+              <th scope="col" className={`${th} pr-0`}>
+                Verdict
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-rule">

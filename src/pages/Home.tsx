@@ -64,11 +64,11 @@ export default function Home() {
         Every take gets a{" "}
         <span className="bg-[linear-gradient(var(--color-runway),var(--color-runway))] bg-size-[100%_40%] bg-bottom bg-no-repeat box-decoration-clone px-1">
           scorecard
-        </span>.
+        </span>
+        .
       </h1>
       <p className="mt-3 max-w-[56ch] text-body text-ink-muted text-pretty">
-        A running record of pundit takes — tracked, judged, and never
-        forgotten.
+        A running record of pundit takes — tracked, judged, and never forgotten.
       </p>
 
       {!loading && uniquePundits.length > 0 && (
@@ -92,7 +92,11 @@ export default function Home() {
         <TakesTable
           takes={takes.map((t) => ({
             ...t,
-            pundit: { slug: t.punditSlug, name: t.punditName, image: t.punditImage },
+            pundit: {
+              slug: t.punditSlug,
+              name: t.punditName,
+              image: t.punditImage,
+            },
           }))}
         />
       </div>
