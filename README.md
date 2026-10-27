@@ -5,7 +5,7 @@
   </picture>
 </h1>
 
-Takeoff is an online community devoted to holding pundits accountable for their takes.
+Takeoff is the home of competitive punditry.
 
 ## Running
 
