@@ -53,5 +53,8 @@
     "typescript": "^6.0.3",
     "vite": "^8.0.10",
     "wrangler": "^4.85.0"
+  },
+  "engines": {
+    "node": ">=22.12"
   }
 }
