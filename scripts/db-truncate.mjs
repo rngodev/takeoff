@@ -32,7 +32,9 @@ try {
   } else {
     const names = tables.map((t) => `"${t.tablename}"`).join(", ");
     await sql.unsafe(`truncate table ${names} restart identity cascade`);
-    console.log(`Truncated ${tables.length} table(s): ${tables.map((t) => t.tablename).join(", ")}`);
+    console.log(
+      `Truncated ${tables.length} table(s): ${tables.map((t) => t.tablename).join(", ")}`,
+    );
   }
 } finally {
   await sql.end();

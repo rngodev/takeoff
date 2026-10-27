@@ -51,7 +51,9 @@ export default function Pundit() {
         }
         return r.json<PunditData>();
       })
-      .then((d) => { if (d) setData(d); })
+      .then((d) => {
+        if (d) setData(d);
+      })
       .finally(() => setLoading(false));
   }, [slug]);
 
@@ -67,7 +69,8 @@ export default function Pundit() {
   const takes = data?.takes ?? [];
   const { correct = 0, incorrect = 0 } = pundit?.stats ?? {};
   const resolved = correct + incorrect;
-  const accuracyPct = resolved > 0 ? Math.round((correct / resolved) * 100) : null;
+  const accuracyPct =
+    resolved > 0 ? Math.round((correct / resolved) * 100) : null;
 
   return (
     <PageShell>
@@ -99,7 +102,11 @@ export default function Pundit() {
             <StatGrid
               stats={[
                 { label: "Takes tracked", value: pundit.stats.takes },
-                { label: "Verified correct", value: pundit.stats.correct, tone: "correct" },
+                {
+                  label: "Verified correct",
+                  value: pundit.stats.correct,
+                  tone: "correct",
+                },
                 {
                   label: "Accuracy",
                   value: accuracyPct !== null ? `${accuracyPct}%` : "—",

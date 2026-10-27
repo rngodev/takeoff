@@ -84,8 +84,12 @@ app.get("/api/pundits/:slug", async (c) => {
     .where(and(eq(takes.punditId, pundit.id), isNull(takes.deletedAt)))
     .orderBy(desc(takes.statedAt));
 
-  const correct = punditTakes.filter((t) => t.resolutionOutcome === "correct").length;
-  const incorrect = punditTakes.filter((t) => t.resolutionOutcome === "incorrect").length;
+  const correct = punditTakes.filter(
+    (t) => t.resolutionOutcome === "correct",
+  ).length;
+  const incorrect = punditTakes.filter(
+    (t) => t.resolutionOutcome === "incorrect",
+  ).length;
 
   return c.json({
     pundit: {
@@ -132,7 +136,13 @@ app.get("/api/takes/:slug", async (c) => {
       resolutions,
       and(eq(resolutions.takeId, takes.id), isNull(resolutions.deletedAt)),
     )
-    .where(and(eq(takes.slug, slug), isNull(takes.deletedAt), isNull(pundits.deletedAt)))
+    .where(
+      and(
+        eq(takes.slug, slug),
+        isNull(takes.deletedAt),
+        isNull(pundits.deletedAt),
+      ),
+    )
     .limit(1);
 
   if (!row) return c.json({ error: "Not found" }, 404);
@@ -142,11 +152,23 @@ app.get("/api/takes/:slug", async (c) => {
       db
         .select({ count: count() })
         .from(positions)
-        .where(and(eq(positions.takeId, row.id), eq(positions.stance, "agree"), isNull(positions.deletedAt))),
+        .where(
+          and(
+            eq(positions.takeId, row.id),
+            eq(positions.stance, "agree"),
+            isNull(positions.deletedAt),
+          ),
+        ),
       db
         .select({ count: count() })
         .from(positions)
-        .where(and(eq(positions.takeId, row.id), eq(positions.stance, "disagree"), isNull(positions.deletedAt))),
+        .where(
+          and(
+            eq(positions.takeId, row.id),
+            eq(positions.stance, "disagree"),
+            isNull(positions.deletedAt),
+          ),
+        ),
       db
         .select({ count: count() })
         .from(boosts)
@@ -165,7 +187,13 @@ app.get("/api/takes/:slug", async (c) => {
           resolutions,
           and(eq(resolutions.takeId, takes.id), isNull(resolutions.deletedAt)),
         )
-        .where(and(eq(takes.punditId, row.punditId), isNull(takes.deletedAt), ne(takes.id, row.id)))
+        .where(
+          and(
+            eq(takes.punditId, row.punditId),
+            isNull(takes.deletedAt),
+            ne(takes.id, row.id),
+          ),
+        )
         .orderBy(desc(takes.statedAt))
         .limit(5),
     ]);

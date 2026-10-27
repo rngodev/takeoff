@@ -199,7 +199,9 @@ export const positions = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
-  (table) => [index("positions_userId_takeId_idx").on(table.userId, table.takeId)],
+  (table) => [
+    index("positions_userId_takeId_idx").on(table.userId, table.takeId),
+  ],
 );
 
 export const boosts = pgTable(
@@ -232,7 +234,10 @@ export const punditFollows = pgTable(
     deletedAt: timestamp("deleted_at"),
   },
   (table) => [
-    index("pundit_follows_userId_punditId_idx").on(table.userId, table.punditId),
+    index("pundit_follows_userId_punditId_idx").on(
+      table.userId,
+      table.punditId,
+    ),
     index("pundit_follows_punditId_idx").on(table.punditId),
   ],
 );
