@@ -29,7 +29,7 @@ permissions:
 env:
   WORKER_NAME: takeoff-pr-${{ github.event.number }}
   NEON_BRANCH: preview/pr-${{ github.event.number }}
-  PREVIEW_HOST: pr-${{ github.event.number }}.preview.takeoff.social
+  PREVIEW_HOST: pr-${{ github.event.number }}-preview.takeoff.social
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
   CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
