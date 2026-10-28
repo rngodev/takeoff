@@ -149,6 +149,18 @@ jobs:
           API_BASE_URL: ${{ needs.deploy.outputs.url }}
           DATABASE_URL: ${{ steps.db.outputs.db_url }}
 
+      # rngo's live progress display doesn't render without a TTY, so print
+      # the simulation details from the log into the job summary instead
+      - name: Summarize eval
+        if: always()
+        run: |
+          sqlite3 -markdown .rngo/evals/last/log.sqlite > "$GITHUB_STEP_SUMMARY" <<'SQL'
+          select 'Inputs by effect' as '';
+          select effect, count(*) as inputs from inputs group by effect order by inputs desc;
+          select 'Outputs by channel' as '';
+          select channel, level, count(*) as outputs from outputs group by channel, level;
+          SQL
+
       - name: Upload eval log
         if: always()
         uses: actions/upload-artifact@v4
