@@ -3,8 +3,8 @@
 #
 # Repo configuration (Settings → Secrets and variables → Actions):
 #   secrets.NEON_API_KEY                  Neon API key
-#   vars.NEON_PROJECT_ID                  Neon project ID
-#   secrets.CLOUDFLARE_API_TOKEN          token with Workers Scripts: Edit
+#   secrets.NEON_PROJECT_ID                  Neon project ID
+#   secrets.CLOUDFLARE_API_TOKEN          Workers Scripts: Edit + Zone Read/Workers Routes: Edit/DNS: Edit on takeoff.social
 #   secrets.CLOUDFLARE_ACCOUNT_ID
 #   secrets.PREVIEW_BETTER_AUTH_SECRET    any random string, shared by all previews
 #
@@ -29,6 +29,7 @@ permissions:
 env:
   WORKER_NAME: takeoff-pr-${{ github.event.number }}
   NEON_BRANCH: preview/pr-${{ github.event.number }}
+  PREVIEW_HOST: pr-${{ github.event.number }}.preview.takeoff.social
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
   CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
@@ -52,7 +53,7 @@ jobs:
         id: db
         uses: neondatabase/create-branch-action@v5
         with:
-          project_id: ${{ vars.NEON_PROJECT_ID }}
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
           branch_name: ${{ env.NEON_BRANCH }}
           # parent: staging   # branch from a sanitized parent instead of production data
           api_key: ${{ secrets.NEON_API_KEY }}
@@ -68,7 +69,7 @@ jobs:
         if: github.event.action == 'synchronize'
         uses: neondatabase/reset-branch-action@v1
         with:
-          project_id: ${{ vars.NEON_PROJECT_ID }}
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
           branch: ${{ env.NEON_BRANCH }}
           parent: true
           api_key: ${{ secrets.NEON_API_KEY }}
@@ -80,16 +81,14 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          VITE_APP_URL: https://${{ env.PREVIEW_HOST }}
 
       - name: Deploy Worker
         id: deploy
         run: |
-          pnpm exec wrangler deploy --name "$WORKER_NAME" | tee "$RUNNER_TEMP/deploy.log"
-          URL=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' "$RUNNER_TEMP/deploy.log" | head -1)
-          if [ -z "$URL" ]; then
-            echo "::error::Couldn't find the workers.dev URL in wrangler's output (is workers.dev enabled for this account?)"
-            exit 1
-          fi
+          pnpm exec wrangler deploy --name "$WORKER_NAME" --domain "$PREVIEW_HOST"
+          URL="https://$PREVIEW_HOST"
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
           jq -n \
@@ -124,7 +123,7 @@ jobs:
         id: db
         uses: neondatabase/create-branch-action@v5
         with:
-          project_id: ${{ vars.NEON_PROJECT_ID }}
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
           branch_name: ${{ env.NEON_BRANCH }}
           api_key: ${{ secrets.NEON_API_KEY }}
 
@@ -176,6 +175,6 @@ jobs:
       - name: Delete Neon branch
         uses: neondatabase/delete-branch-action@v3
         with:
-          project_id: ${{ vars.NEON_PROJECT_ID }}
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
           branch: ${{ env.NEON_BRANCH }}
           api_key: ${{ secrets.NEON_API_KEY }}
