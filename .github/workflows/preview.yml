@@ -1,0 +1,192 @@
+# One Neon branch + one Cloudflare Worker per pull request, evaluated with rngo,
+# torn down when the PR closes.
+#
+# Repo configuration (Settings → Secrets and variables → Actions):
+#   secrets.NEON_API_KEY                  Neon API key
+#   secrets.NEON_PROJECT_ID                  Neon project ID
+#   secrets.CLOUDFLARE_API_TOKEN          Workers Scripts: Edit + Zone Read/Workers Routes: Edit/DNS: Edit on takeoff.social
+#   secrets.CLOUDFLARE_ACCOUNT_ID
+#   secrets.PREVIEW_BETTER_AUTH_SECRET    any random string, shared by all previews
+#
+# Fork PRs don't receive secrets, so this only runs for branches in this repo.
+# Don't switch it to `pull_request_target`: that would run untrusted PR code
+# with these secrets and a copy of the production database.
+
+name: PR preview
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+concurrency:
+  group: preview-${{ github.event.number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  WORKER_NAME: takeoff-pr-${{ github.event.number }}
+  NEON_BRANCH: preview/pr-${{ github.event.number }}
+  PREVIEW_HOST: pr-${{ github.event.number }}-preview.takeoff.social
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  deploy:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # Idempotent: returns the existing branch on later pushes to the PR
+      - name: Create Neon branch
+        id: db
+        uses: neondatabase/create-branch-action@v5
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch_name: ${{ env.NEON_BRANCH }}
+          # parent: staging   # branch from a sanitized parent instead of production data
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+      - name: Mask connection strings
+        run: |
+          echo "::add-mask::${{ steps.db.outputs.db_url }}"
+          echo "::add-mask::${{ steps.db.outputs.db_url_pooled }}"
+
+      # The rngo spec seeds data with a fixed seed, so a second eval on the same
+      # branch would collide with rows from the first. Start each push clean.
+      - name: Reset Neon branch to parent
+        if: github.event.action == 'synchronize'
+        uses: neondatabase/reset-branch-action@v1
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch: ${{ env.NEON_BRANCH }}
+          parent: true
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+      - name: Run migrations
+        run: pnpm db:migrate
+        env:
+          DATABASE_URL: ${{ steps.db.outputs.db_url }}
+
+      - name: Build
+        run: pnpm build
+        env:
+          VITE_APP_URL: https://${{ env.PREVIEW_HOST }}
+
+      - name: Deploy Worker
+        id: deploy
+        run: |
+          pnpm exec wrangler deploy --name "$WORKER_NAME" --domain "$PREVIEW_HOST"
+          URL="https://$PREVIEW_HOST"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+          jq -n \
+            --arg db "$DATABASE_URL" \
+            --arg secret "$BETTER_AUTH_SECRET" \
+            --arg url "$URL" \
+            '{DATABASE_URL: $db, BETTER_AUTH_SECRET: $secret, BETTER_AUTH_URL: $url}' \
+            > "$RUNNER_TEMP/secrets.json"
+          pnpm exec wrangler secret bulk "$RUNNER_TEMP/secrets.json" --name "$WORKER_NAME"
+          rm "$RUNNER_TEMP/secrets.json"
+        env:
+          DATABASE_URL: ${{ steps.db.outputs.db_url_pooled }}
+          BETTER_AUTH_SECRET: ${{ secrets.PREVIEW_BETTER_AUTH_SECRET }}
+
+      - name: Comment preview URL
+        if: github.event.action == 'opened' || github.event.action == 'reopened'
+        run: |
+          gh pr comment ${{ github.event.number }} --repo "$GITHUB_REPOSITORY" \
+            --body "Preview: ${{ steps.deploy.outputs.url }} (Neon branch \`$NEON_BRANCH\`)"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  simulate:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Job outputs that contain masked values are dropped, so look the
+      # branch up again instead of passing the URL from `deploy`.
+      - name: Get Neon branch
+        id: db
+        uses: neondatabase/create-branch-action@v5
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch_name: ${{ env.NEON_BRANCH }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+      - name: Mask connection string
+        run: echo "::add-mask::${{ steps.db.outputs.db_url }}"
+
+      - name: Install rngo
+        run: |
+          gh release download --repo rngodev/rngo \
+            --pattern '*-x86_64-unknown-linux-musl.zip' --dir "$RUNNER_TEMP/rngo"
+          unzip -q "$RUNNER_TEMP"/rngo/*.zip -d "$RUNNER_TEMP/rngo/bin"
+          chmod +x "$RUNNER_TEMP/rngo/bin/rngo"
+          echo "$RUNNER_TEMP/rngo/bin" >> "$GITHUB_PATH"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - run: rngo --version && psql --version
+
+      # Exits non-zero when a signal's expectation fails, which fails the check
+      - name: Evaluate
+        run: rngo eval --limit 500
+        env:
+          API_BASE_URL: ${{ needs.deploy.outputs.url }}
+          DATABASE_URL: ${{ steps.db.outputs.db_url }}
+
+      # rngo's live progress display doesn't render without a TTY, so print
+      # the simulation details from the log into the job summary instead
+      - name: Summarize eval
+        if: always()
+        run: |
+          sqlite3 -markdown .rngo/evals/last/log.sqlite > "$GITHUB_STEP_SUMMARY" <<'SQL'
+          select 'Inputs by effect' as '';
+          select effect, count(*) as inputs from inputs group by effect order by inputs desc;
+          select 'Outputs by channel' as '';
+          select channel, level, count(*) as outputs from outputs group by channel, level;
+          SQL
+
+      - name: Upload eval log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rngo-eval-pr-${{ github.event.number }}
+          path: .rngo/evals/
+          if-no-files-found: ignore
+
+  cleanup:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Delete Worker
+        run: pnpm exec wrangler delete --name "$WORKER_NAME" --force || true
+
+      - name: Delete Neon branch
+        uses: neondatabase/delete-branch-action@v3
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch: ${{ env.NEON_BRANCH }}
+          api_key: ${{ secrets.NEON_API_KEY }}
