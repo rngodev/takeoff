@@ -144,7 +144,7 @@ jobs:
 
       # Exits non-zero when a signal's expectation fails, which fails the check
       - name: Evaluate
-        run: rngo eval
+        run: rngo eval --limit 500
         env:
           API_BASE_URL: ${{ needs.deploy.outputs.url }}
           DATABASE_URL: ${{ steps.db.outputs.db_url }}
