@@ -103,6 +103,13 @@ jobs:
           DATABASE_URL: ${{ steps.db.outputs.db_url_pooled }}
           BETTER_AUTH_SECRET: ${{ secrets.PREVIEW_BETTER_AUTH_SECRET }}
 
+      # Hits the database, so it fails if the Worker points at the wrong branch.
+      # Retries cover the new hostname's DNS and certificate coming up.
+      - name: Smoke test
+        run: |
+          curl -sS --fail-with-body --retry 12 --retry-delay 10 --retry-all-errors \
+            "https://$PREVIEW_HOST/api/takes" > /dev/null
+
       - name: Comment preview URL
         if: github.event.action == 'opened' || github.event.action == 'reopened'
         run: |
