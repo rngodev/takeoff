@@ -1,5 +1,5 @@
+prototype: backfill
 trigger: hz(10, hour)
-channel: db
 metadata:
   table: boosts
 generator:

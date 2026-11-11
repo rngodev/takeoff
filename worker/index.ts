@@ -22,6 +22,12 @@ app.use("/api/*", async (c, next) => {
   return corsMiddleware(c, next);
 });
 
+// Drizzle wraps driver errors ("Failed query: ..."), so log the cause too
+app.onError((err, c) => {
+  console.error(err, err.cause);
+  return c.text("Internal Server Error", 500);
+});
+
 app.on(["GET", "POST"], "/api/auth/*", (c) => {
   return createAuth(c.env).handler(c.req.raw);
 });

@@ -1,3 +1,14 @@
 key: takeoff
 seed: 1
-end: now + minutes(3)
+prototypes:
+  backfill:
+    start: now - days(31)
+    end: now
+    channel: db
+    scenarios:
+      ci:
+        start: now - days(5)
+  realtime:
+    start: now
+    end: now + minutes(3)
+    channel: api

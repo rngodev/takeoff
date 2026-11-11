@@ -61,7 +61,7 @@ jobs:
       - name: Mask connection strings
         run: |
           echo "::add-mask::${{ steps.db.outputs.db_url }}"
-          echo "::add-mask::${{ steps.db.outputs.db_url_pooled }}"
+          echo "::add-mask::${{ steps.db.outputs.db_url_with_pooler }}"
 
       # The rngo spec seeds data with a fixed seed, so a second eval on the same
       # branch would collide with rows from the first. Start each push clean.
@@ -100,8 +100,15 @@ jobs:
           pnpm exec wrangler secret bulk "$RUNNER_TEMP/secrets.json" --name "$WORKER_NAME"
           rm "$RUNNER_TEMP/secrets.json"
         env:
-          DATABASE_URL: ${{ steps.db.outputs.db_url_pooled }}
+          DATABASE_URL: ${{ steps.db.outputs.db_url_with_pooler }}
           BETTER_AUTH_SECRET: ${{ secrets.PREVIEW_BETTER_AUTH_SECRET }}
+
+      # Hits the database, so it fails if the Worker points at the wrong branch.
+      # Retries cover the new hostname's DNS and certificate coming up.
+      - name: Smoke test
+        run: |
+          curl -sS --fail-with-body --retry 12 --retry-delay 10 --retry-all-errors \
+            "https://$PREVIEW_HOST/api/takes" > /dev/null
 
       - name: Comment preview URL
         if: github.event.action == 'opened' || github.event.action == 'reopened'
@@ -144,7 +151,7 @@ jobs:
 
       # Exits non-zero when a signal's expectation fails, which fails the check
       - name: Evaluate
-        run: rngo eval --limit 500
+        run: rngo eval --scenario ci
         env:
           API_BASE_URL: ${{ needs.deploy.outputs.url }}
           DATABASE_URL: ${{ steps.db.outputs.db_url }}

@@ -1,5 +1,5 @@
+prototype: backfill
 trigger: hz(1, hour)
-channel: db
 metadata:
   table: resolutions
 generator:

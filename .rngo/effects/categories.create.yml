@@ -1,6 +1,6 @@
+prototype: backfill
 trigger: hz(4, day)
-end: now - days(29)
-channel: db
+end: prototype.start + days(1)
 metadata:
   table: categories
 generator:
