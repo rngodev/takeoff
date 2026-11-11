@@ -61,7 +61,7 @@ jobs:
       - name: Mask connection strings
         run: |
           echo "::add-mask::${{ steps.db.outputs.db_url }}"
-          echo "::add-mask::${{ steps.db.outputs.db_url_pooled }}"
+          echo "::add-mask::${{ steps.db.outputs.db_url_with_pooler }}"
 
       # The rngo spec seeds data with a fixed seed, so a second eval on the same
       # branch would collide with rows from the first. Start each push clean.
@@ -100,7 +100,7 @@ jobs:
           pnpm exec wrangler secret bulk "$RUNNER_TEMP/secrets.json" --name "$WORKER_NAME"
           rm "$RUNNER_TEMP/secrets.json"
         env:
-          DATABASE_URL: ${{ steps.db.outputs.db_url_pooled }}
+          DATABASE_URL: ${{ steps.db.outputs.db_url_with_pooler }}
           BETTER_AUTH_SECRET: ${{ secrets.PREVIEW_BETTER_AUTH_SECRET }}
 
       # Hits the database, so it fails if the Worker points at the wrong branch.
