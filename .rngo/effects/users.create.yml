@@ -1,5 +1,5 @@
+prototype: backfill
 trigger: hz(2, hour)
-channel: db
 metadata:
   table: users
 generator:

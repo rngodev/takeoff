@@ -1,7 +1,5 @@
+prototype: realtime
 trigger: hz(2, minute)
-start: now
-end: now + minutes(3)
-channel: api
 generator:
   type: object
   properties:

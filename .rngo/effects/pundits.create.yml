@@ -1,5 +1,5 @@
+prototype: backfill
 trigger: hz(1, day)
-channel: db
 metadata:
   table: pundits
 generator:

@@ -1,5 +1,5 @@
+prototype: backfill
 trigger: hz(20, hour)
-channel: db
 metadata:
   table: positions
 generator:
